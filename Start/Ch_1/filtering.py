@@ -34,3 +34,16 @@ print(lower)
 # open the data file and load the JSON
 with open("../../30DayQuakes.json", "r") as datafile:
     data = json.load(datafile)
+
+def notAQuoke(q):
+    if q['properties']["type"] == "earthquake":
+        return False
+    return True
+
+events = list(filter(notAQuoke, data['features']))
+print(f"total non quokes events {len(events)}")
+
+for i in range(0,10):
+    print(events[i]['properties']['type'])
+
+print(f"event last {events[186]['properties']['sig']}")

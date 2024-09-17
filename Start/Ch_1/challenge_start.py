@@ -10,7 +10,33 @@ import json
 # 3: Print the name of the place whose quake was felt by the most people, with the # of reports
 # 4: Print the top 10 most significant events, with the significance value of each
 
-# open the data file and load the JSON
-with open("../../30DayQuakes.json", "r") as datafile:
-    data = json.load(datafile)
+TotalEvents = 0
+TotalFelt = 0
+MostFeltEvent = ""
+MostFeltCount = 0
+
+def calc_summary():
+    global TotalEvents, TotalFelt, MostFeltEvent, MostFeltCount
+    with open("../../30DayQuakes.json", "r") as datafile:
+        data = json.load(datafile)
+
+    TotalEvents = int(data["metadata"]["count"])
+
+    felt_reports = list(filter(feltreport, data["features"]))
+    TotalFelt = len(felt_reports)
+
+    mostfeltquake = max(data["features"], key=getfelt)
+    MostFeltEvent = mostfeltquake["properties"]["title"]
     
+    MostFeltCount = int(mostfeltquake["properties"]["felt"])
+
+
+def feltreport(q):
+    f = q["properties"]["felt"]
+    return (f is not None and f >= 100)
+
+def getfelt(q):
+    f = q["properties"]["felt"]
+    if f is not None:
+        return f
+    return 0
